@@ -7,13 +7,17 @@ class Student(models.Model):
     name = models.CharField(max_length=200)
     course = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
-    batch = models.CharField(max_length=100)
+    batch_from = models.IntegerField()
+    batch_to = models.IntegerField()
+    study_year = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(7)])
+    section = models.CharField(max_length=2,blank=True,null=True)
     dob = models.DateField()
     contact_no = models.CharField(max_length=30)
     address = models.CharField(max_length=600)
     is_hostelite = models.BooleanField()
     family_details = models.OneToOneField('student.FamilyDets',on_delete=models.CASCADE,related_name='Student')
     past_academics = models.OneToOneField('student.PastAcademics',on_delete=models.CASCADE,related_name='Student')
+    mentor_name = models.CharField(max_length=300)
     # attendance = models.OneToOneField('student.Attendance',on_delete=models.CASCADE,related_name='student')
 
 class FamilyDets(models.Model):
@@ -37,6 +41,7 @@ class PastOtherExams(models.Model):
     exam_name = models.CharField(max_length=100)
     result = models.DecimalField(max_digits=15,decimal_places=6)
     total = models.DecimalField(max_digits=15,decimal_places=6)
+    # unique
 
 class Attendance(models.Model):
     roll_no = models.ForeignKey('student.Student',on_delete=models.CASCADE,related_name='Attendance')
@@ -65,7 +70,7 @@ class AbsentDetails(models.Model):
     absent_type = models.CharField(max_length=20,choices=absent_type_choices)
     desc = models.CharField(max_length=200)
     
-# ####
+
 class InternalPerformance(models.Model):
     roll_no=models.ForeignKey('student.student',on_delete=models.CASCADE,related_name='AcademicDetails')
     semester_no=models.IntegerField(validators=[MaxValueValidator(12),MinValueValidator(1)])
@@ -100,8 +105,8 @@ class SemesterPerformance(models.Model):
 
 class Projects(models.Model):
     roll_no = models.OneToOneField('student.Student',on_delete=models.CASCADE,related_name='Projects')
-    start_Date=models.DateField()
-    end_Date=models.DateField()
+    start_date=models.DateField()
+    end_date=models.DateField()
     organisation=models.CharField(max_length=100)
     specialization=models.CharField(max_length=200)
     certificate=models.FileField()
@@ -115,9 +120,9 @@ class Achievements(models.Model):
         ('participated','partcipated'),
     )
     roll_no = models.ForeignKey('student.Student',on_delete=models.CASCADE,related_name='Achievements')
-    semester = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(12)])
+    semester_held = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(12)])
     date=models.DateField()
-    organisation=models.CharField(max_length=300)
+    organization=models.CharField(max_length=300)
     event_name=models.CharField(max_length=200)
     document=models.FileField(upload_to = '/achievements',blank=True,null=True)
     status=models.CharField(max_length=10,choices=status_choices)
@@ -140,6 +145,7 @@ class PlacementDetails(models.Model):
 class DisciplinaryDetails(models.Model):
     roll_no=models.ForeignKey('student.Student',on_delete=models.CASCADE,related_name='DisiplinaryDetails')
     date=models.DateField()
+    semester_held = models.IntegerField(validators = [MinValueValidator(1),MaxValueValidator(12)])
     description=models.CharField(max_length=100)
     document = models.FileField(upload_to='/disiplinary',blank=True,null=True)
 
