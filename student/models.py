@@ -1,8 +1,9 @@
 from django.db import models
 from django.core.validators import MinValueValidator,MaxValueValidator
-  
+from datetime import datetime
+
 class Student(models.Model):
-    regno = models.CharField(blank=False,null=False,primary_key=True,db_index=True,unique=True,max_length=10)
+    roll_no = models.CharField(blank=False,null=False,primary_key=True,db_index=True,unique=True,max_length=10)
     name = models.CharField(max_length=200)
     course = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
@@ -20,7 +21,7 @@ class FamilyDets(models.Model):
     relationship = models.CharField(max_length=100)
     occupation = models.CharField(max_length = 200)
     occupation_address = models.CharField(max_length=300)
-    salary = models.DecimalField(max_digits=15,decimal_places=2)
+    salary = models.DecimalField(max_digits=15,decimal_places=2,blank=True,null=True)
     phone = models.CharField(max_length=30)
 
 class PastAcademics(models.Model):
@@ -47,8 +48,8 @@ class Attendance(models.Model):
     
 
     def save(self,*args,**kwargs):
-        super().save(*args, **kwargs)
         self.present_percentage = (self.present_working_days/self.total_working_days) * 100
+        super().save(*args, **kwargs)
        
 class AbsentDetails(models.Model):
     absent_type_choices = [
@@ -75,8 +76,8 @@ class InternalPerformance(models.Model):
     percentage_scored = models.DecimalField(max_digits=5,decimal_places=2)
     
     def save(self,*args,**kwargs):
-        super.save(*args,**kwargs)
         self.percentage_scored = (self.scored_marks/self.total_marks) * 100
+        super.save(*args,**kwargs)
 
 class SemesterPerformance(models.Model):
     grade_choices=[
@@ -114,11 +115,18 @@ class Achievements(models.Model):
         ('participated','partcipated'),
     )
     roll_no = models.ForeignKey('student.Student',on_delete=models.CASCADE,related_name='Achievements')
+    semester = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(12)])
     date=models.DateField()
     organisation=models.CharField(max_length=300)
     event_name=models.CharField(max_length=200)
     document=models.FileField(upload_to = '/achievements',blank=True,null=True)
     status=models.CharField(max_length=10,choices=status_choices)
+
+    def save(self,*args,**kwargs):
+        now = datetime.now()
+        string_datetime = now.strftime("%Y-%m-%d %H:%M:%S")
+        self.document.name = f"{self.roll_no} {string_datetime}"
+        super().save(*args,**kwargs)
 
 
 class PlacementDetails(models.Model):
@@ -134,6 +142,12 @@ class DisciplinaryDetails(models.Model):
     date=models.DateField()
     description=models.CharField(max_length=100)
     document = models.FileField(upload_to='/disiplinary',blank=True,null=True)
+
+    def save(self,*args,**kwargs):
+        now = datetime.now()
+        string_time = now.strftime("%Y-%m-%d %H:%M%S")
+        self.document.name = f'{self.roll_no} {string_time}'
+        super().save(*args,**kwargs)
 
 
 
