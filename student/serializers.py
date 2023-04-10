@@ -24,6 +24,9 @@ class PastOtherExamsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PastOtherExams
         fields = '__all__'
+    def create(self, validated_data):
+        print(validated_data)
+        return super().create(validated_data)
 
 
 # Enter student init data along with family_details and past_academics
@@ -34,18 +37,16 @@ class StudentSerializer(serializers.ModelSerializer):
         
     family_dets = FamilyDetsSerializer(many=False)
     past_academics = PastAcademicsSerializer(many=False)
-    past_other_exams = PastOtherExamsSerializer(many=False)
 
     def create(self,validated_data):
+        print('\n\n\nasfd\n\n\n')
         family_dets = validated_data.pop('family_dets')
         past_academics = validated_data.pop('past_academics')
-        past_other_exams = past_academics.pop('past_other_exams')
         family_instance = FamilyDets.objects.create(**family_dets)
         past_academics_instance = PastAcademics.objects.create(**past_academics)
         student_instance = Student.objects.create(family_details = family_instance,
                                                   past_academics = past_academics_instance,
                                                     **validated_data)
-        PastOtherExams.objects.create(roll_no = student_instance,**past_other_exams)
         return student_instance
 
 # login for student

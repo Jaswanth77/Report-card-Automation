@@ -11,3 +11,7 @@ class StaffLogin(models.Model):
     login_id = models.CharField(max_length=200,null=True)
     password = models.CharField(max_length=300)
     desc = models.CharField(max_length=100,null=True)
+
+class OtherDets(models.Model):
+    staff_id = models.ForeignKey('staff.Staff',on_delete=models.CASCADE,related_name='other_dets')
+    desc = models.CharField(max_length=200)

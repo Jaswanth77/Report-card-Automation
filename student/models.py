@@ -36,12 +36,12 @@ class PastAcademics(models.Model):
     percentage = models.DecimalField(max_digits= 15, decimal_places=6, blank = True, null=True)
 
 class PastOtherExams(models.Model):
-    roll_no= models.ForeignKey('student.Student',on_delete=models.CASCADE,related_name='PastOtherExams')
-    year_of_exam = models.DateField()
+    roll_no= models.CharField(max_length=100)
+    year_of_exam = models.IntegerField()
     exam_name = models.CharField(max_length=100)
     result = models.DecimalField(max_digits=15,decimal_places=6)
     total = models.DecimalField(max_digits=15,decimal_places=6)
-       
+
 class Attendance(models.Model):
     roll_no = models.ForeignKey('student.Student',on_delete=models.CASCADE,related_name='Attendance')
     semester = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(12)])
