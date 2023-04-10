@@ -2,7 +2,7 @@ from rest_framework import serializers
 from . models import Attendance,AbsentDetails,FamilyDets
 from . models import PastAcademics,PastOtherExams,Student
 from .models import InternalPerformance,SemesterPerformance,Projects,Achievements
-from .models import PlacementDetails,DisciplinaryDetails
+from .models import PlacementDetails,DisciplinaryDetails,StudentLogin
 # partial = True for serializer.save()
 
 
@@ -19,6 +19,12 @@ class PastAcademicsSerializer(serializers.ModelSerializer):
         model = PastAcademics
         fields = '__all__'
         
+#insert Past other exams only with student init data
+class PastOtherExamsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PastOtherExams
+        fields = '__all__'
+
 
 # Enter student init data along with family_details and past_academics
 class StudentSerializer(serializers.ModelSerializer):
@@ -28,7 +34,7 @@ class StudentSerializer(serializers.ModelSerializer):
         
     family_dets = FamilyDetsSerializer(many=False)
     past_academics = PastAcademicsSerializer(many=False)
-
+    past_other_exams = PastOtherExamsSerializer(many=False)
 
     def create(self,validated_data):
         family_dets = validated_data.pop('family_dets')
@@ -42,18 +48,17 @@ class StudentSerializer(serializers.ModelSerializer):
         PastOtherExams.objects.create(roll_no = student_instance,**past_other_exams)
         return student_instance
 
-
+# login for student
+class StudentLoginSerializer(serializers.ModelSerializer):
+    # student = StudentSerializer(many=False)
+    class Meta:
+        model = StudentLogin
+        fields = '__all__'
+        
 # insert absent Details without attendance entry
 class AbsentDetailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = AbsentDetails
-        fields = '__all__'
-        
-
-#insert Past other exams only with student init data
-class PastOtherExamsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PastOtherExams
         fields = '__all__'
         
 

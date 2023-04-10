@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-(ml4ok4b#&me4swofbnw0q&ug5ny(39o3lp$k+pt^hhus_@w$s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,22 +37,31 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'student',
+    'staff',
     'corsheaders',
-    'student'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',  
+    'corsheaders.middleware.CorsMiddleware',  
     'django.contrib.sessions.middleware.SessionMiddleware',  
     'django.middleware.common.CommonMiddleware',  
     'django.middleware.csrf.CsrfViewMiddleware',  
     'django.contrib.auth.middleware.AuthenticationMiddleware',  
     'django.contrib.messages.middleware.MessageMiddleware',  
-    'corsheaders.middleware.CorsMiddleware',  
     'django.middleware.clickjacking.XFrameOptionsMiddleware',  
 ]  
   
 ROOT_URLCONF = 'reportCard.urls'
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000',
+]
 
 TEMPLATES = [
     {

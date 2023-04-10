@@ -4,6 +4,7 @@ from datetime import datetime
 
 class Student(models.Model):
     roll_no = models.CharField(blank=False,null=False,primary_key=True,db_index=True,unique=True,max_length=10)
+    mentor = models.ForeignKey('staff.Staff',on_delete=models.CASCADE,related_name='mentees')
     name = models.CharField(max_length=200)
     course = models.CharField(max_length=100)
     department = models.CharField(max_length=100)
@@ -17,7 +18,6 @@ class Student(models.Model):
     is_hostelite = models.BooleanField()
     family_details = models.OneToOneField('student.FamilyDets',on_delete=models.CASCADE,related_name='Student')
     past_academics = models.OneToOneField('student.PastAcademics',on_delete=models.CASCADE,related_name='Student')
-    mentor_name = models.CharField(max_length=300)
     # attendance = models.OneToOneField('student.Attendance',on_delete=models.CASCADE,related_name='student')
 
 class FamilyDets(models.Model):
@@ -41,8 +41,7 @@ class PastOtherExams(models.Model):
     exam_name = models.CharField(max_length=100)
     result = models.DecimalField(max_digits=15,decimal_places=6)
     total = models.DecimalField(max_digits=15,decimal_places=6)
-    # unique
-
+       
 class Attendance(models.Model):
     roll_no = models.ForeignKey('student.Student',on_delete=models.CASCADE,related_name='Attendance')
     semester = models.IntegerField(validators=[MinValueValidator(1),MaxValueValidator(12)])
@@ -72,7 +71,7 @@ class AbsentDetails(models.Model):
     
 
 class InternalPerformance(models.Model):
-    roll_no=models.ForeignKey('student.student',on_delete=models.CASCADE,related_name='AcademicDetails')
+    roll_no=models.ForeignKey('student.Student',on_delete=models.CASCADE,related_name='AcademicDetails')
     semester_no=models.IntegerField(validators=[MaxValueValidator(12),MinValueValidator(1)])
     exam_type = models.CharField(max_length=100)
     eaxm_number = models.CharField(max_length=100)
@@ -96,7 +95,7 @@ class SemesterPerformance(models.Model):
         ('AB','ABSENT'),
         ('MM','MALPRACTICE')
     ]
-    roll_no = models.OneToOneField('student.AcademicDetails',on_delete=models.CASCADE,related_name='SemesterPerformance')
+    roll_no = models.OneToOneField('student.student',on_delete=models.CASCADE,related_name='SemesterPerformance')
     semester_no=models.IntegerField(validators=[MaxValueValidator(12),MinValueValidator(1)])
     subject_code=models.CharField(max_length=10)
     grade=models.CharField(max_length=2,choices=grade_choices)
@@ -124,8 +123,8 @@ class Achievements(models.Model):
     date=models.DateField()
     organization=models.CharField(max_length=300)
     event_name=models.CharField(max_length=200)
-    document=models.FileField(upload_to = '/achievements',blank=True,null=True)
-    status=models.CharField(max_length=10,choices=status_choices)
+    document=models.FileField(upload_to = 'achievements/',blank=True,null=True)
+    status=models.CharField(max_length=30,choices=status_choices)
 
     def save(self,*args,**kwargs):
         now = datetime.now()
@@ -139,7 +138,7 @@ class PlacementDetails(models.Model):
     company_name=models.CharField(max_length=300)
     date=models.DateField()
     results=models.BooleanField()
-    package=models.DecimalField()
+    package=models.DecimalField(max_digits=6,decimal_places=2)
 
 
 class DisciplinaryDetails(models.Model):
@@ -147,7 +146,7 @@ class DisciplinaryDetails(models.Model):
     date=models.DateField()
     semester_held = models.IntegerField(validators = [MinValueValidator(1),MaxValueValidator(12)])
     description=models.CharField(max_length=100)
-    document = models.FileField(upload_to='/disiplinary',blank=True,null=True)
+    document = models.FileField(upload_to='disiplinary/',blank=True,null=True)
 
     def save(self,*args,**kwargs):
         now = datetime.now()
@@ -155,7 +154,9 @@ class DisciplinaryDetails(models.Model):
         self.document.name = f'{self.roll_no} {string_time}'
         super().save(*args,**kwargs)
 
-
+class StudentLogin(models.Model):
+    roll_no = models.CharField(max_length=10)
+    password = models.CharField(max_length=200)
 
 
 

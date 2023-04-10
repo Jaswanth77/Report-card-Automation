@@ -1,12 +1,15 @@
 from django.contrib import admin
 from django.urls import path
-from .views import StudentView,AbsentDetailsView,PastOtherExamsVIew,AttendanceView,InternalPerformanceView
+from .views import StudentView,AbsentDetailsView,PastOtherExamsView,AttendanceView,InternalPerformanceView,StudentLoginView
 from .views import SemesterPerformanceView,ProjectsView,AchievementsView,PlacementDetailsView,DisiplinaryDetailsView
 
+app_name = 'student'
+
 urlpatterns = [
-    path('student/<str:roll_no>', StudentView.as_view()),
+    path('login/',StudentLoginView.as_view()),
+    path('student/<str:roll_no>', StudentView.as_view(),name='StudentInit'),
     path('absentDetails/<str:roll_no>',AbsentDetailsView.as_view()),
-    path('pastOtherExams/<str:roll_no>',PastOtherExamsVIew.as_view()),
+    path('pastOtherExams/<str:roll_no>',PastOtherExamsView.as_view()),
     path('attendance/<str:roll_no>',AttendanceView.as_view()),
     path('internalPerformance/<str:roll_no>',InternalPerformanceView.as_view()),
     path('semesterPerformance/<str:roll_no>',SemesterPerformanceView.as_view()),

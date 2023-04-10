@@ -3,11 +3,15 @@ from rest_framework.generics import CreateAPIView,UpdateAPIView,RetrieveAPIView,
 
 from .serializers import StudentSerializer,AbsentDetailsSerializer,PastOtherExamsSerializer,AttendanceSerializer
 from .serializers import InternalPerformanceSerializer,SemesterPerformanceSerializer,ProjectsSerializer,AchievementsSerializer
-from .serializers import PlacementDetailsSerializer,DisciplinaryDetailsSerializer
+from .serializers import PlacementDetailsSerializer,DisciplinaryDetailsSerializer,StudentLoginSerializer
 
-from . models import Student,AbsentDetails,PastOtherExams,Attendance,InternalPerformance
+from . models import Student,AbsentDetails,PastOtherExams,Attendance,InternalPerformance,StudentLogin
 from . models import SemesterPerformance,Projects,Achievements,PlacementDetails,DisciplinaryDetails
 
+class StudentLoginView(CreateAPIView):
+    queryset = StudentLogin.objects.all()
+    serializer_class = StudentLoginSerializer
+    
 class StudentView(CreateAPIView,UpdateAPIView,RetrieveAPIView,DestroyAPIView,ListAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
