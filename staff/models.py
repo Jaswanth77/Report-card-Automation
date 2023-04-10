@@ -13,4 +13,5 @@ class StaffLogin(models.Model):
     desc = models.CharField(max_length=100)
 
 class OtherDets(models.Model):
+    staff = models.ForeignKey('staff.Staff',on_delete=models.CASCADE,related_name='Other_dets')
     desc = models.CharField(max_length=200)
