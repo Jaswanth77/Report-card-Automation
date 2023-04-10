@@ -14,7 +14,6 @@ class StaffView(CreateAPIView):
     serializer_class = StaffSerializer
     queryset = Staff.objects.all()
     parser_classes = [parsers.JSONParser]
-    lookup_field = 'staff_id'
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data = request.data)
@@ -23,5 +22,4 @@ class StaffView(CreateAPIView):
         self.perform_create(serializer)
         print('this is a demo','\n\n\n\n',serializer.data)
         return Response(serializer.data,status=200)
-
     
