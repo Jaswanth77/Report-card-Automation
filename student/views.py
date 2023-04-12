@@ -20,21 +20,19 @@ class StudentView(CreateAPIView,UpdateAPIView,RetrieveAPIView,DestroyAPIView,Lis
     filter_backends = [filters.SearchFilter]
     search_fields = ['roll_no','course','department','batch_from','batch_to','is_hostelite','study_year','section']
     
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data = request.data)
-        print('asfd',serializer)
-        print(serializer.is_valid())
-        self.perform_create(serializer)
-        return Response(serializer.data,status=200)
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data = request.data)
+    #     if not serializer.is_valid():
+    #         print(serializer.errors)
+    #     self.perform_create(serializer)
+    #     return Response(serializer.data,status=200)
 
 class PastOtherExamsView(CreateAPIView,UpdateAPIView,DestroyAPIView,ListAPIView):
     queryset = PastOtherExams.objects.all()
     serializer_class = PastOtherExamsSerializer()
-    print('/asdfsasadf/nsadfsadf\nsadffsa')
     lookup_field = 'roll_no'
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data = request.data)
-        print('asfd',serializer)
         print(serializer.is_valid())
         self.perform_create(serializer)
         return Response(serializer.data,status=200)

@@ -24,9 +24,6 @@ class PastOtherExamsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PastOtherExams
         fields = '__all__'
-    def create(self, validated_data):
-        print(validated_data)
-        return super().create(validated_data)
 
 
 # Enter student init data along with family_details and past_academics
@@ -35,19 +32,36 @@ class StudentSerializer(serializers.ModelSerializer):
         model = Student
         fields = '__all__'
         
-    family_dets = FamilyDetsSerializer(many=False)
+    family_details = FamilyDetsSerializer(many=False)
     past_academics = PastAcademicsSerializer(many=False)
 
     def create(self,validated_data):
-        print('\n\n\nasfd\n\n\n')
-        family_dets = validated_data.pop('family_dets')
-        past_academics = validated_data.pop('past_academics')
-        family_instance = FamilyDets.objects.create(**family_dets)
-        past_academics_instance = PastAcademics.objects.create(**past_academics)
+        family_details_data = validated_data.pop('family_details')
+        past_academics_data = validated_data.pop('past_academics')
+        family_instance = FamilyDets.objects.create(**family_details_data)
+        past_academics_instance = PastAcademics.objects.create(**past_academics_data)
         student_instance = Student.objects.create(family_details = family_instance,
                                                   past_academics = past_academics_instance,
                                                     **validated_data)
         return student_instance
+    
+    def update(self, instance, validated_data):
+        family_details_data = validated_data.pop('family_details', None)
+        past_academics_data = validated_data.pop('past_academics', None)
+        
+        instance = super().update(instance, validated_data)
+
+        if family_details_data:
+            family_details_serializer = self.fields['family_details']
+            family_details_instance = instance.family_details
+            family_details_serializer.update(family_details_instance, family_details_data)
+
+        if past_academics_data:
+            past_academics_serializer = self.fields['past_academics']
+            past_academics_instance = instance.past_academics
+            past_academics_serializer.update(past_academics_instance, past_academics_data)
+
+        return instance
 
 # login for student
 class StudentLoginSerializer(serializers.ModelSerializer):

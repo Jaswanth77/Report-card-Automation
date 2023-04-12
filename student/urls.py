@@ -7,8 +7,8 @@ app_name = 'student'
 
 urlpatterns = [
     path('pastOtherExams/',PastOtherExamsView.as_view()),
-    path('login/',StudentLoginView.as_view()),
-    path('student/', StudentView.as_view(),name='StudentInit'),
+    path('login/<str:roll_no>',StudentLoginView.as_view()),
+    path('student/<str:roll_no>', StudentView.as_view(),name='StudentInit'),
     path('absentDetails/<str:roll_no>',AbsentDetailsView.as_view()),
     path('pastOtherExams/<str:roll_no>',PastOtherExamsView.as_view()),
     path('attendance/<str:roll_no>',AttendanceView.as_view()),
