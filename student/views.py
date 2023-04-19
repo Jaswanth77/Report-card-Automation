@@ -1,11 +1,11 @@
 from rest_framework import filters
 from rest_framework.generics import CreateAPIView,UpdateAPIView,RetrieveAPIView,DestroyAPIView,ListAPIView
 
-from .serializers import StudentSerializer,AbsentDetailsSerializer,PastOtherExamsSerializer,AttendanceSerializer
+from .serializers import StudentSerializer,AbsentDetailsSerializer,AttendanceSerializer
 from .serializers import InternalPerformanceSerializer,SemesterPerformanceSerializer,ProjectsSerializer,AchievementsSerializer
 from .serializers import PlacementDetailsSerializer,DisciplinaryDetailsSerializer,StudentLoginSerializer
 
-from . models import Student,AbsentDetails,PastOtherExams,Attendance,InternalPerformance,StudentLogin
+from . models import Student,AbsentDetails,Attendance,InternalPerformance,StudentLogin
 from . models import SemesterPerformance,Projects,Achievements,PlacementDetails,DisciplinaryDetails
 
 from rest_framework.response import Response
@@ -25,18 +25,7 @@ class StudentView(CreateAPIView,UpdateAPIView,RetrieveAPIView,DestroyAPIView,Lis
     #     if not serializer.is_valid():
     #         print(serializer.errors)
     #     self.perform_create(serializer)
-    #     return Response(serializer.data,status=200)
-
-class PastOtherExamsView(CreateAPIView,UpdateAPIView,DestroyAPIView,ListAPIView):
-    queryset = PastOtherExams.objects.all()
-    serializer_class = PastOtherExamsSerializer()
-    lookup_field = 'roll_no'
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data = request.data)
-        print(serializer.is_valid())
-        self.perform_create(serializer)
-        return Response(serializer.data,status=200)
-
+    #     return Response(serializer.data,status=201)
 
 class AbsentDetailsView(CreateAPIView,UpdateAPIView,DestroyAPIView,ListAPIView):
     queryset = AbsentDetails.objects.all()
@@ -68,14 +57,6 @@ class AbsentDetailsView(CreateAPIView,UpdateAPIView,DestroyAPIView,ListAPIView):
                 absent_filters[key] = filter_params[key]
         queryset = queryset.filter(**absent_filters)
         return queryset
-
-
-class PastOtherExamsView(CreateAPIView,UpdateAPIView,DestroyAPIView,ListAPIView):
-    queryset = PastOtherExams.objects.all()
-    serializer_class = PastOtherExamsSerializer
-    lookup_field = 'roll_no'
-    filter_backends = [filters.SearchFilter]
-    search_fields = ['roll_no']
     
 
 class AttendanceView(CreateAPIView,UpdateAPIView,DestroyAPIView,ListAPIView):

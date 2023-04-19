@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from . models import Attendance,AbsentDetails,FamilyDets
-from . models import PastAcademics,PastOtherExams,Student
+from . models import PastAcademics,Student
 from .models import InternalPerformance,SemesterPerformance,Projects,Achievements
 from .models import PlacementDetails,DisciplinaryDetails,StudentLogin
 # partial = True for serializer.save()
@@ -17,12 +17,6 @@ class FamilyDetsSerializer(serializers.ModelSerializer):
 class PastAcademicsSerializer(serializers.ModelSerializer):
     class Meta:
         model = PastAcademics
-        fields = '__all__'
-        
-#insert Past other exams only with student init data
-class PastOtherExamsSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PastOtherExams
         fields = '__all__'
 
 
